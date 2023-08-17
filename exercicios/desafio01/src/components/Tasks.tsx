@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid'
 import { PlusCircle } from "phosphor-react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 
 import styles from "./Tasks.module.css";
@@ -15,6 +15,8 @@ interface TaskProps {
 export default function Tasks() {
   const [tasks, setTasks] = useState<TaskProps[]>([])
   const [taskInput, setTaskInput] = useState('');
+
+  const completedTasksCount = tasks.filter(task => task.status === true)
 
   function handleAddNewTask(event: FormEvent) {
     event.preventDefault();
@@ -58,10 +60,10 @@ export default function Tasks() {
       <section className={styles.container}>
         <div className={styles.header}>
           <p className={styles.createdTasks}>
-            Tarefas Criadas <span className="tasksCount">0</span>
+            Tarefas Criadas <span className="tasksCount">{tasks.length}</span>
           </p>
           <p className={styles.concludedTasks}>
-            Concluídas <span className="tasksCount">0</span>
+            Concluídas <span className="tasksCount">{completedTasksCount.length}</span>
           </p>
         </div>
         <div className={styles.taskList}>
