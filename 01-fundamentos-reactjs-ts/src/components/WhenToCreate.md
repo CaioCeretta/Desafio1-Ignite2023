@@ -13,5 +13,12 @@ register on the db, and so on. The upload button has a whole functionality that 
 This is the second case, you can use that upload button in a component, even though it may not be used on various other
 places in the application, we can use this because or user listing will become cleaner, to give maintenance on the user
 list we don't have to have the whole upload logic on the same file, we break down that logic in another component so
-they are cleaner to give maintenance, these are the two biggest moments where we  create a component in react.
- 
+they are cleaner to give maintenance, these are the two biggest moments where we create a component in react.
+
+Other thing is that sometimes things that may look like they have the need of it becoming a component, just because they
+SEEM to be the same thing, just because they have a text inside and a box that contains it, one may have an icon and the
+other doesn't, one don't have a filling and the other has, sometimes things that look similar to us, don't necessarily
+will become a component, if i were to create a component for this button, i would have to create many variation
+(with icon, without icon, with background, without background, with filling, without filling and so on), i will end up
+creating a little monster that sometimes is easier for us not to have this component than having a component that receives
+ so many variations.
