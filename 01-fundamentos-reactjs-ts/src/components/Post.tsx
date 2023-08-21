@@ -1,8 +1,8 @@
-import { enUS } from "date-fns/locale";
-import { Avatar } from "./Avatar";
+// import { enUS } from "date-fns/locale";
+// import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
-import { format, formatDistanceToNow } from 'date-fns'
-import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
+// import { format, formatDistanceToNow } from 'date-fns'
+// import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 
 import styles from "./Post.module.css";
 
@@ -32,18 +32,36 @@ export function Post() {
             <p>Chuck Norris</p>
             <span>Tudo</span>
           </div>
-          <time title="August 18th at 08:13h" dateTime="2023-08-18 08:13:30">Published 1hr ago</time>
         </div>
+
+
+        <time title="August 18th at 08:13h" dateTime="2023-08-18 08:13:30">Published 1hr ago</time>
       </header>
       <div className={styles.content}>
         <p>
-           What's up guys! 👐 
+          What's up guys! 👐
         </p>
         <p>I just finished one more project in my portifolio. It's a project i made on NLW Return, rocketseat's event</p>
 
         <p>⤴ <a href="#">chuck.design/doctorcare </a></p>
 
         <a href="">#JS</a> <a href="">#React</a>
+      </div>
+
+      <form action="" className={styles.commentForm}>
+        <strong>Leave your feedback</strong>
+
+        <textarea placeholder="Leave a comment" />
+
+        <footer>
+          <button type="submit">Comment</button>
+        </footer>
+
+      </form>
+      <div className={styles.commentList}>
+        <Comment />
+        <Comment />
+        <Comment />
       </div>
     </article>
   )
