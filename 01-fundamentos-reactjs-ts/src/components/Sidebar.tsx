@@ -12,7 +12,7 @@ export function Sidebar() {
       />
 
       <div className={styles.profile}>
-        <Avatar src="https://imagens.brasil.elpais.com/resizer/efFAffvmdH_navaqaTm_vE_dRTY=/1200x0/arc-anglerfish-eu-central-1-prod-prisa.s3.amazonaws.com/public/4VUEQEUHS5UOZPD3N2K7LKWX5M.jpg" />
+        <Avatar src="https://imagens.brasil.elpais.com/resizer/efFAffvmdH_navaqaTm_vE_dRTY=/1200x0/arc-anglerfish-eu-central-1-prod-prisa.s3.amazonaws.com/public/4VUEQEUHS5UOZPD3N2K7LKWX5M.jpg" hasBorder/>
 
         <strong>Chuck Norris</strong>
         <span>Tudo</span>

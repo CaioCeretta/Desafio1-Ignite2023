@@ -1,9 +1,9 @@
+import { format, formatDistanceToNow } from 'date-fns';
 import { enUS } from "date-fns/locale";
-import {Avatar} from "./Avatar";
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
+import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
 import styles from "./Post.module.css";
-import { format, formatDistanceToNow} from 'date-fns'
-import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 
 // author: {name, content, avatarUrl}
 // publishedAt: Date

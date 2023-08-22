@@ -1,15 +1,38 @@
-// import { enUS } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 // import { Avatar } from "./Avatar";
+import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
-// import { format, formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 // import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 
 import styles from "./Post.module.css";
+import { FormEvent, useState } from "react";
 
-interface AuthorProps {
-  author: string
+interface ContentProps {
+  type: 'paragraph' | 'link'
   content: string
 }
+
+export interface PostProps {
+  author: AuthorProps;
+  publishedAt: Date;
+  content: ContentProps[];
+}
+
+interface AuthorProps {
+  name: string;
+  role: string;
+  avatarUrl: string;
+}
+
+interface CommentProps {
+  comment: string;
+  id: number;
+}
+
+//Estado são variaveis que eu quero que o componente monitore
+
+
 
 function addOrdinalIndicator(day: number) {
   if (day > 3 && day < 21) return `${day}th`;
@@ -21,37 +44,68 @@ function addOrdinalIndicator(day: number) {
   }
 }
 
-export function Post() {
+
+export function Post({ author, publishedAt, content }: PostProps) {
+
+  const [comments, setComments] = useState<CommentProps[]>([{ comment: 'Cool post, huh', id: 1 }])
+  const [commentText, setCommentText] = useState('');
+
+  const publishedDateFormatted = format(publishedAt, "d 'of' LLLL 'at' HH:mm'h'", {
+    locale: enUS
+  })
+
+
+  const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+    locale: enUS,
+    addSuffix: true
+  });
+
+  function handleCreateNewComment(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+
+    setComments([...comments, { comment: commentText, id: comments.length + 1 }])
+
+    setCommentText('');
+
+  }
+
 
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <img className={styles.avatar} src="https://imagens.brasil.elpais.com/resizer/efFAffvmdH_navaqaTm_vE_dRTY=/1200x0/arc-anglerfish-eu-central-1-prod-prisa.s3.amazonaws.com/public/4VUEQEUHS5UOZPD3N2K7LKWX5M.jpg" alt="" />
+          <Avatar src={author.avatarUrl} />
           <div className={styles.authorInfo}>
-            <p>Chuck Norris</p>
-            <span>Tudo</span>
+            <p>{author.name}</p>
+            <span>{author.role}</span>
           </div>
         </div>
 
 
-        <time title="August 18th at 08:13h" dateTime="2023-08-18 08:13:30">Published 1hr ago</time>
+        <time title={publishedDateFormatted} dateTime="2023-08-18 08:13:30">
+          {publishedDateRelativeToNow}
+        </time>
       </header>
       <div className={styles.content}>
-        <p>
-          What's up guys! 👐
-        </p>
-        <p>I just finished one more project in my portifolio. It's a project i made on NLW Return, rocketseat's event</p>
+        {content.map(line => {
 
-        <p>⤴ <a href="#">chuck.design/doctorcare </a></p>
-
-        <a href="">#JS</a> <a href="">#React</a>
+          if (line.type === 'paragraph') {
+            return <p>{line.content}</p>
+          } else if (line.type === 'link') {
+            return <p><a href="">{line.content}</a></p>
+          }
+        })}
       </div>
 
-      <form action="" className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Leave your feedback</strong>
 
-        <textarea placeholder="Leave a comment" />
+        <textarea
+          value={commentText}
+          name="comment"
+          onChange={(e) => setCommentText(e.target.value)}
+          placeholder="Leave a comment" />
 
         <footer>
           <button type="submit">Comment</button>
@@ -59,9 +113,10 @@ export function Post() {
 
       </form>
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map((comment) => (
+          <Comment key={comment.id} comment={comment.comment} />
+        ))}
+
       </div>
     </article>
   )
