@@ -6,7 +6,7 @@ import { format, formatDistanceToNow } from 'date-fns'
 // import { ChangeEvent, FormEvent, InvalidEvent, useState } from "react";
 
 import styles from "./Post.module.css";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
 
 interface ContentProps {
   type: 'paragraph' | 'link'
@@ -47,7 +47,7 @@ function addOrdinalIndicator(day: number) {
 
 export function Post({ author, publishedAt, content }: PostProps) {
 
-  const [comments, setComments] = useState<CommentProps[]>([{ comment: 'Cool post, huh', id: 1 }])
+  const [comments, setComments] = useState<CommentProps[]>([])
   const [commentText, setCommentText] = useState('');
 
   const publishedDateFormatted = format(publishedAt, "d 'of' LLLL 'at' HH:mm'h'", {
@@ -60,6 +60,20 @@ export function Post({ author, publishedAt, content }: PostProps) {
     addSuffix: true
   });
 
+  function handleNewCommentChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    e.preventDefault()
+    if(e.target instanceof HTMLTextAreaElement) {
+      e.target.setCustomValidity('')
+    }
+    setCommentText(e.target.value)
+  }
+
+  function handleDeleteComment(id: number) {
+    const newComments = comments.filter(comment => id !== comment.id)
+
+    setComments(newComments)
+  }
+
   function handleCreateNewComment(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
@@ -67,9 +81,18 @@ export function Post({ author, publishedAt, content }: PostProps) {
     setComments([...comments, { comment: commentText, id: comments.length + 1 }])
 
     setCommentText('');
+    setComments([...comments, {id: comments.length + 1, comment: commentText}]);
+
 
   }
 
+  function handleNewCommentInvalid(event: FormEvent<HTMLTextAreaElement>) {
+    if(event.currentTarget instanceof HTMLTextAreaElement) {
+      event.currentTarget.setCustomValidity('This is a custom validity error')
+    }
+  }
+
+  const isNewCommentEmpty  = commentText.length === 0;
 
   return (
     <article className={styles.post}>
@@ -91,9 +114,9 @@ export function Post({ author, publishedAt, content }: PostProps) {
         {content.map(line => {
 
           if (line.type === 'paragraph') {
-            return <p>{line.content}</p>
+            return <p key={line.content}>{line.content}</p>
           } else if (line.type === 'link') {
-            return <p><a href="">{line.content}</a></p>
+            return <p key={line.content}><a href="">{line.content}</a></p>
           }
         })}
       </div>
@@ -104,17 +127,20 @@ export function Post({ author, publishedAt, content }: PostProps) {
         <textarea
           value={commentText}
           name="comment"
-          onChange={(e) => setCommentText(e.target.value)}
-          placeholder="Leave a comment" />
+          onChange={handleNewCommentChange}
+          placeholder="Leave a comment"
+          onInvalid={handleNewCommentInvalid}
+          required
+        />
 
         <footer>
-          <button type="submit">Comment</button>
+          <button disabled={isNewCommentEmpty} type="submit">Comment</button>
         </footer>
 
       </form>
       <div className={styles.commentList}>
         {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment.comment} />
+          <Comment onDelete={handleDeleteComment} key={comment.id} id={comment.id} comment={comment.comment} />
         ))}
 
       </div>
